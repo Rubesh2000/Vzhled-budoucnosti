@@ -1,0 +1,9 @@
+{
+"name":"Smysl budoucnosti",
+"short_name":"FutureSense",
+"start_url":"./index.html",
+"display":"standalone",
+"background_color":"#050816",
+"theme_color":"#050816",
+"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"}]
+}
