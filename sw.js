@@ -1,20 +1,9 @@
-const CACHE_NAME="future-sense-v01";
-const FILES=[
-"./",
-"./index.html",
-"./manifest.webmanifest",
-"./icon-192.png",
-"./icon-512.png"
-];
-
+const CACHE="future-sense-neuro-v1";
 self.addEventListener("install",e=>{
-e.waitUntil(
- caches.open(CACHE_NAME).then(c=>c.addAll(FILES))
-);
+e.waitUntil(caches.open(CACHE).then(c=>c.addAll([
+"./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png"
+])));
 });
-
 self.addEventListener("fetch",e=>{
-e.respondWith(
- caches.match(e.request).then(r=>r||fetch(e.request))
-);
+e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));
 });

@@ -3,211 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Instinkt budoucnosti</title>
+<title>Smysl budoucnosti</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#050816">
 <style>
-body{
+html,body{
  margin:0;
- background:#050816;
- color:#eaf1ff;
+ background:#030712;
+ color:#dfe8ff;
  font-family:system-ui,sans-serif;
  overflow:hidden;
+ height:100%;
+}
+body{
+ background:
+ radial-gradient(circle at 20% 20%, rgba(60,90,255,.10), transparent 30%),
+ radial-gradient(circle at 80% 70%, rgba(0,255,170,.06), transparent 35%),
+ #030712;
 }
 #app{
- min-height:100vh;
+ position:fixed;
+ inset:0;
+}
+#overlay{
+ position:absolute;
+ inset:0;
+ background:
+ repeating-linear-gradient(
+  to bottom,
+  rgba(255,255,255,.015),
+  rgba(255,255,255,.015) 1px,
+  transparent 1px,
+  transparent 3px
+ );
+ opacity:.3;
+ pointer-events:none;
+}
+#hud{
+ position:absolute;
+ top:16px;
+ left:16px;
+ right:16px;
  display:flex;
- flex-direction:column;
+ justify-content:space-between;
+ z-index:5;
+ font-weight:700;
 }
-header{
- padding:20px;
- border-bottom:1px solid rgba(255,255,255,.08);
- background:rgba(255,255,255,.03);
- backdrop-filter:blur(10px);
+#title{
+ position:absolute;
+ top:50%;
+ left:50%;
+ transform:translate(-50%,-50%);
+ text-align:center;
+ opacity:.9;
+ transition:.6s;
 }
-h1{
+#title h1{
  margin:0;
- font-size:32px;
+ font-size:38px;
 }
-.sub{
- opacity:.75;
- margin-top:6px;
+#title p{
+ opacity:.7;
+ line-height:1.5;
 }
-.grid{
- display:grid;
- grid-template-columns:1fr;
- gap:14px;
- padding:18px;
- overflow:auto;
-}
-.card{
- background:rgba(255,255,255,.04);
- border:1px solid rgba(255,255,255,.08);
- border-radius:20px;
- padding:18px;
-}
-.card h2{
- margin:0 0 8px;
-}
-button{
- width:100%;
- padding:16px;
+#start{
+ margin-top:18px;
+ padding:14px 22px;
  border:none;
- border-radius:16px;
+ border-radius:14px;
  background:#284cff;
  color:white;
  font-weight:800;
  font-size:16px;
 }
-.small{
- opacity:.7;
- font-size:14px;
- line-height:1.5;
-}
-#training{
- position:fixed;
- inset:0;
- display:none;
- background:#050816;
-}
-#hud{
+.flash{
  position:absolute;
- top:14px;
- left:14px;
- right:14px;
- display:flex;
- justify-content:space-between;
- font-weight:800;
- z-index:5;
-}
-#target{
- position:absolute;
- width:84px;
- height:84px;
+ width:80px;
+ height:80px;
  border-radius:50%;
- background:#7ca8ff;
- box-shadow:0 0 45px #7ca8ff;
- display:none;
+ background:#7da2ff;
+ filter:blur(1px);
+ opacity:0;
+ transition:opacity .08s;
 }
-#message{
+#msg{
  position:absolute;
- bottom:24px;
+ bottom:22px;
  left:50%;
  transform:translateX(-50%);
- background:rgba(0,0,0,.45);
- padding:12px 16px;
+ background:rgba(0,0,0,.35);
+ padding:12px 18px;
  border-radius:12px;
+ font-size:14px;
+ opacity:.8;
+}
+.noise{
+ position:absolute;
+ inset:0;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+ opacity:.12;
+ pointer-events:none;
 }
 </style>
 </head>
 <body>
 
 <div id="app">
+<div id="overlay"></div>
+<div class="noise"></div>
 
-<header>
-<h1>Instinkt budoucnosti</h1>
-<div class="sub">Future Sense Trainer</div>
-</header>
-
-<div class="grid">
-
-<div class="card">
-<h2>🧠 O projektu</h2>
-<div class="small">
-Mobilní trenažér:
-<br>• pozornosti
-<br>• instinktu
-<br>• periferního vidění
-<br>• reakce
-<br>• předvídání nebezpečí
-<br>• orientace v chaosu
-</div>
-</div>
-
-<div class="card">
-<h2>🌆 NeuroCity</h2>
-<div class="small">
-Simulace budoucího města.
-Zvuky, světla a nebezpečí.
-</div>
-<button onclick="startMode('NeuroCity')">▶️ Start</button>
-</div>
-
-<div class="card">
-<h2>👁️ Šestý smysl</h2>
-<div class="small">
-Vibrace, periferní bliknutí a reakce.
-</div>
-<button onclick="startMode('Šestý smysl')">▶️ Start</button>
-</div>
-
-<div class="card">
-<h2>⚠️ Chaos Brain</h2>
-<div class="small">
-Mozek pod přetížením.
-Vyber správný signál.
-</div>
-<button onclick="startMode('Chaos Brain')">▶️ Start</button>
-</div>
-
-<div class="card">
-<h2>🛡️ Survival Instinct</h2>
-<div class="small">
-Nebezpečí a falešné signály.
-</div>
-<button onclick="startMode('Survival Instinct')">▶️ Start</button>
-</div>
-
-<div class="card">
-<h2>🔊 Echo</h2>
-<div class="small">
-Sluchový trénink vlevo/vpravo.
-</div>
-<button onclick="startMode('Echo')">▶️ Start</button>
-</div>
-
-<div class="card">
-<h2>📡 Periphery</h2>
-<div class="small">
-Objekty pouze na kraji obrazovky.
-</div>
-<button onclick="startMode('Periphery')">▶️ Start</button>
-</div>
-
-</div>
-</div>
-
-<div id="training">
 <div id="hud">
-<div>⚡ Skóre: <span id="score">0</span></div>
-<div>⏱️ <span id="time">30</span>s</div>
-<div id="modeName"></div>
+<div>🧠 Instinkt</div>
+<div>⚡ <span id="score">0</span></div>
+<div>⏱️ <span id="time">60</span>s</div>
 </div>
 
-<div id="target"></div>
+<div id="title">
+<h1>Smysl budoucnosti</h1>
+<p>
+Nejde o rychlý prst.<br>
+Jde o vnímání reality.
+</p>
+<button id="start">▶️ Zahájit neuro-trénink</button>
+</div>
 
-<div id="message">
-Reaguj co nejrychleji
+<div id="msg">
+Naslouchej. Vnímej periferní pohyb. Některé signály jsou falešné.
 </div>
 </div>
 
 <script>
-if('serviceWorker' in navigator){
- navigator.serviceWorker.register('./sw.js');
+if("serviceWorker" in navigator){
+ navigator.serviceWorker.register("./sw.js");
 }
 
 const app=document.getElementById("app");
-const training=document.getElementById("training");
-const target=document.getElementById("target");
 const scoreEl=document.getElementById("score");
 const timeEl=document.getElementById("time");
-const modeName=document.getElementById("modeName");
+const title=document.getElementById("title");
+const startBtn=document.getElementById("start");
 
-let score=0;
-let timeLeft=30;
 let running=false;
+let score=0;
+let time=60;
 let loop;
 let timer;
+let activeSignal=null;
 
 function vibrate(ms){
  if(navigator.vibrate){
@@ -215,141 +155,202 @@ function vibrate(ms){
  }
 }
 
-function beep(freq=520){
+function ambientBeep(freq=400,vol=.02,dur=.08,pan=0){
  try{
   const ctx=new(window.AudioContext||window.webkitAudioContext)();
   const osc=ctx.createOscillator();
   const gain=ctx.createGain();
 
-  osc.connect(gain);
-  gain.connect(ctx.destination);
+  let panner=null;
+  if(ctx.createStereoPanner){
+   panner=ctx.createStereoPanner();
+   panner.pan.value=pan;
+  }
 
   osc.frequency.value=freq;
-  gain.gain.value=0.05;
+  gain.gain.value=vol;
+
+  osc.connect(gain);
+
+  if(panner){
+   gain.connect(panner);
+   panner.connect(ctx.destination);
+  }else{
+   gain.connect(ctx.destination);
+  }
 
   osc.start();
-  osc.stop(ctx.currentTime+0.12);
+  osc.stop(ctx.currentTime+dur);
  }catch(e){}
 }
 
-function randomPos(periphery=false){
- const w=window.innerWidth-90;
- const h=window.innerHeight-90;
+function flash(side,real=true){
+ const d=document.createElement("div");
+ d.className="flash";
 
- let x=Math.random()*w;
- let y=Math.random()*h;
+ const y=Math.random()*(window.innerHeight-120)+40;
 
- if(periphery){
-  const side=Math.floor(Math.random()*4);
-
-  if(side===0){x=10;}
-  if(side===1){x=w-10;}
-  if(side===2){y=10;}
-  if(side===3){y=h-10;}
+ if(side==="left"){
+  d.style.left="10px";
+ }
+ if(side==="right"){
+  d.style.right="10px";
+ }
+ if(side==="top"){
+  d.style.top="20px";
+ }
+ if(side==="bottom"){
+  d.style.bottom="20px";
  }
 
- target.style.left=x+"px";
- target.style.top=y+"px";
+ if(side==="left"||side==="right"){
+  d.style.top=y+"px";
+ }else{
+  d.style.left=(Math.random()*(window.innerWidth-120)+40)+"px";
+ }
+
+ if(!real){
+  d.style.background="#ff6b6b";
+ }
+
+ app.appendChild(d);
+
+ requestAnimationFrame(()=>{
+  d.style.opacity=real?0.9:0.45;
+ });
+
+ setTimeout(()=>{
+  d.style.opacity=0;
+ },120);
+
+ setTimeout(()=>{
+  d.remove();
+ },500);
+
+ activeSignal={
+  real:real,
+  side:side,
+  time:Date.now()
+ };
 }
 
-function spawn(mode){
+function spawnSignal(){
  if(!running)return;
 
- const periphery = mode==="Periphery";
+ const sides=["left","right","top","bottom"];
+ const side=sides[Math.floor(Math.random()*sides.length)];
 
- randomPos(periphery);
+ const real=Math.random()>.35;
 
- target.style.display="block";
-
- if(mode==="Echo"){
-  beep(Math.random()>0.5?340:860);
+ if(side==="left"){
+  ambientBeep(280,.03,.09,-1);
+ }
+ if(side==="right"){
+  ambientBeep(760,.03,.09,1);
  }
 
- if(mode==="Chaos Brain"){
-  if(Math.random()>0.5){
-   target.style.background="#ff6767";
-  }else{
-   target.style.background="#7ca8ff";
-  }
+ if(side==="top"||side==="bottom"){
+  ambientBeep(520,.02,.07,0);
  }
 
- vibrate(25);
+ if(real){
+  vibrate(20);
+ }
+
+ flash(side,real);
+
+ setTimeout(()=>{
+  activeSignal=null;
+ },900);
 }
 
-function startMode(mode){
- app.style.display="none";
- training.style.display="block";
-
- score=0;
- timeLeft=30;
+function startTraining(){
  running=true;
+ score=0;
+ time=60;
 
  scoreEl.textContent=score;
- timeEl.textContent=timeLeft;
- modeName.textContent=mode;
+ timeEl.textContent=time;
 
- spawn(mode);
+ title.style.opacity=0;
+ title.style.pointerEvents="none";
 
  loop=setInterval(()=>{
-  spawn(mode);
- },1300);
+  spawnSignal();
+ },1400 + Math.random()*1200);
 
  timer=setInterval(()=>{
-  timeLeft--;
-  timeEl.textContent=timeLeft;
+  time--;
+  timeEl.textContent=time;
 
-  if(timeLeft<=0){
-   endGame();
+  if(time<=0){
+   endTraining();
   }
  },1000);
+
+ setInterval(()=>{
+  document.body.style.transform=
+   "translate("+
+   ((Math.random()-.5)*0.6)+"px,"+
+   ((Math.random()-.5)*0.6)+"px)";
+ },180);
 }
 
-function endGame(){
+function endTraining(){
  running=false;
 
  clearInterval(loop);
  clearInterval(timer);
 
- training.innerHTML=`
- <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px">
- <h1>Trénink dokončen</h1>
+ title.style.opacity=1;
+ title.style.pointerEvents="auto";
 
- <div style="opacity:.8;line-height:1.6">
- Skóre: ${score}
+ title.innerHTML=`
+ <h1>Analýza dokončena</h1>
+ <p>
+ Reakce: ${score}
  <br><br>
  Trénoval jsi:
- <br>• pozornost
- <br>• reakci
- <br>• instinkt
- <br>• periferní vidění
+ <br>• podvědomé vyhodnocení
+ <br>• periferní vnímání
+ <br>• orientaci v chaosu
  <br>• rozhodování pod tlakem
- </div>
+ </p>
 
- <button style="margin-top:22px;max-width:320px" onclick="location.reload()">
+ <button id="restart">
  🔁 Znovu
  </button>
- </div>`;
+ `;
+
+ document.getElementById("restart").onclick=()=>{
+  location.reload();
+ };
 }
 
-function hit(e){
- e.preventDefault();
-
+function react(){
  if(!running)return;
 
- score++;
+ if(!activeSignal)return;
+
+ const delay=Date.now()-activeSignal.time;
+
+ if(activeSignal.real && delay<800){
+  score+=2;
+  vibrate(40);
+  ambientBeep(900,.04,.05,0);
+ }else if(!activeSignal.real){
+  score-=1;
+  ambientBeep(120,.05,.2,0);
+ }
+
  scoreEl.textContent=score;
-
- target.style.display="none";
-
- vibrate(50);
-
- setTimeout(()=>{
-  spawn(modeName.textContent);
- },250);
+ activeSignal=null;
 }
 
-target.addEventListener("touchstart",hit);
-target.addEventListener("click",hit);
+document.body.addEventListener("touchstart",react);
+document.body.addEventListener("click",react);
+
+startBtn.onclick=startTraining;
 </script>
 
 </body>
